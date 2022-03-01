@@ -77,12 +77,9 @@ function coinFlip() {
   }
 
   function coinFlips(number) {
-    let tosses = []
-    if(number == null) {
-      number = 1;
-    }
+    var tosses = []
     for (var i = 0; i < number; i++) {
-      tosses[i] = coinFlip()
+      tosses.push(coinFlip())
     }
     return tosses
   }
