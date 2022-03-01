@@ -29,8 +29,6 @@ app.get('/app/echo/:number',  (req, res) => {
     res.status(200).json({ 'message': req.params.number})
 })
 
-
-
 // /app/flip/ will be used to tesst single flip without import coin.mjs
 app.get('/app/flip/', (req, res) => {
     const flip = coinFlip()
@@ -40,6 +38,18 @@ app.get('/app/flip/', (req, res) => {
 // /app/flips/:number is many flips 
 app.get('/app/flips/:number', (req, res) => {
     const flips = coinFlips(req.params.number)
+    res.status(200).json({'raw': flips})
+    // need to add summary count flips
+})
+
+app.get('/app/flip/call/heads', (req, res) => {
+    const str = 'heads'
+    res.status(200).json({'': flipACoin(str)})
+})
+
+app.get('/app/flip/call/tails', (req, res) => {
+  const str = 'tails'
+  res.status(200).json({'': flipACoin(str)})
 })
 
 //Define default endpoint
@@ -71,3 +81,53 @@ function coinFlip() {
     }
     return tosses
   }
+
+  function countFlips(array) {
+    let count_tails = 0
+    let count_heads = 0
+    for(let i = 0; i < array.length; i++) {
+      if(array[i] == 'tails') {
+        count_tails++;
+      } else if(array[i] == 'heads') {
+        count_heads++;
+      }
+    }
+  
+    if(count_tails == 0) {
+      return('{ heads: ' + count_heads + ' }')
+    } else if (count_heads == 0) {
+      return('{ tails: ' + count_tails + ' }')
+    } else {
+    return('{ heads: ' + count_heads + ', tails: ' + count_tails + ' }')
+    }
+  }
+  
+  /** Flip a coin!
+   * 
+   * Write a function that accepts one input parameter: a string either "heads" or "tails", flips a coin, and then records "win" or "lose". 
+   * 
+   * @param {string} call 
+   * @returns {object} with keys that are the input param (heads or tails), a flip (heads or tails), and the result (win or lose). See below example.
+   * 
+   * example: flipACoin('tails')
+   * returns: { call: 'tails', flip: 'heads', result: 'lose' }
+   */
+  
+  function flipACoin(call) {
+    if(call == null) {
+      return('Error: no input') //return error no input
+    }
+    if(call == 'heads' || call == 'tails') {
+      let flip = coinFlip()
+      let result = 'lose'
+      if(flip == call) {
+        result = 'win'
+      }
+      return("{ call: '" + call + "', flip: '" + flip + "', result: '" + result + "' }")
+    } else {
+      return('Usage: node guess-flip.js --call= [heads | tails]')
+  
+    }
+    
+  }
+  
