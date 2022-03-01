@@ -38,7 +38,9 @@ app.get('/app/flip/', (req, res) => {
 // /app/flips/:number is many flips 
 app.get('/app/flips/:number', (req, res) => {
     const flips = coinFlips(req.params.number)
-    res.status(200).json({'raw': flips, 'summary': countFlips(flips)})
+    const tails = countTails(flips)
+    const heads = countHeads(flips)
+    res.status(200).json({'raw': flips, 'summary': {'heads': heads, 'tails': tails}})
 })
 
 // /app/flip/call/heads filp a coing with a call to heads
@@ -141,3 +143,24 @@ function coinFlip() {
     return(result)
   }
   
+  function countTails(flips) {
+    let countT = 0;
+    for(var i = 0; i < flips.length; i++) {
+      if(flips[i] == 'tails') {
+        countT++;
+      }
+    }
+
+    return countT
+  }
+
+  function countHeads(flips) {
+    let countH = 0;
+    for(var i = 0; i < flips.length; i++) {
+      if(flips[i] == 'heads') {
+        countH++;
+      }
+    }
+
+    return countH
+  }
