@@ -38,18 +38,23 @@ app.get('/app/flip/', (req, res) => {
 // /app/flips/:number is many flips 
 app.get('/app/flips/:number', (req, res) => {
     const flips = coinFlips(req.params.number)
-    res.status(200).json({'raw': flips})
-    // need to add summary count flips
+    res.status(200).json({'raw': flips, 'summary': countFlips(flips)})
 })
 
+// /app/flip/call/heads filp a coing with a call to heads
 app.get('/app/flip/call/heads', (req, res) => {
     const str = 'heads'
-    res.status(200).json({'': flipACoin(str)})
+    const flip = coinFlip()
+    const result = win(flip, str)
+    res.status(200).json({ 'call': str, 'flip': flip, 'result': result})
 })
 
+// /app/flip/call/tails filp a coing with a call to tails
 app.get('/app/flip/call/tails', (req, res) => {
   const str = 'tails'
-  res.status(200).json({'': flipACoin(str)})
+  const flip = coinFlip()
+  const result = win(flip, str)
+  res.status(200).json({ 'call': str, 'flip': flip, 'result': result})
 })
 
 //Define default endpoint
@@ -129,5 +134,13 @@ function coinFlip() {
   
     }
     
+  }
+
+  function win(flip, call) {
+    let result = 'lose'
+    if(flip == call) {
+      result = 'win'
+    }
+    return(result)
   }
   
